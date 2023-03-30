@@ -1,7 +1,7 @@
 import React from 'react';
 import { StyleSheet, Text, View } from 'react-native';
 
-import CustomModal from '../Modal'
+import CustomModal from '../CustomModal'
 
 export const ModalOptions = () => {
   return (
