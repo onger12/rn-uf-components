@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
-import { Modal, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { Modal, ScrollView, View, ViewStyle, StyleSheet, TouchableOpacity, StyleProp } from 'react-native';
+
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 
 type ModalSize = 's' | 'l' | 'm' | 'xl' | 'xxl';
@@ -18,6 +19,7 @@ interface HeaderProps {
   Title? : TitleProps;
 }
 interface ContentProps {
+  style?: StyleProp<ViewStyle>
   children? : JSX.Element | JSX.Element[];
 }
 interface FooterProps {
@@ -58,9 +60,14 @@ const CustomModal = ({ children, size, visible, onPressBackdrop, closeModal } : 
         <TouchableOpacity
           activeOpacity={ 1 }
         >
-          <View 
+          <ScrollView 
             style={[ styles.modalInternalContainer, { width : WIDTH } ]}
-          >{ children }</View>
+            contentContainerStyle={ styles.modalInternalContentContainer }
+            showsHorizontalScrollIndicator={ false }
+            showsVerticalScrollIndicator={ false }
+          >
+            { children }
+          </ScrollView>
         </TouchableOpacity>
       </TouchableOpacity>
     </Modal>
@@ -74,9 +81,9 @@ const Header = ({ children } : HeaderProps) => {
     </View>
   )
 }
-const Content = ({ children } : ContentProps) => {
+const Content = ({ children, style } : ContentProps) => {
   return (
-    <View style={ styles.contentContainer }>
+    <View style={ style ? style :  styles.contentContainer }>
       { children }
     </View>
   )
@@ -110,6 +117,7 @@ const styles = StyleSheet.create({
   modalInternalContainer : {
     borderRadius : 12,
     backgroundColor : '#fff',
+    maxHeight : heightPercentageToDP(90),
   },
   headerContainer : {
     borderWidth : 1,
@@ -125,6 +133,9 @@ const styles = StyleSheet.create({
     borderLeftColor : '#ccc',
     borderRightColor  : '#ccc',
     alignItems : 'center',
+  },
+  modalInternalContentContainer : {
+    // paddingVertical : heightPercentageToDP(2),
   },
   footerContainer : {
     borderWidth : 1,

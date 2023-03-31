@@ -1,15 +1,16 @@
 import React, { useState } from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Text, TouchableOpacity } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialIcons';
-import { TouchableOpacity } from 'react-native-gesture-handler';
 import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 
 import { ModalOptions } from './ModalOptions';
+import { OptionType } from '../../types';
 
 interface Props {
   placeholder : string;
-  children : JSX.Element | JSX.Element[];
+  options : OptionType[];
+  onChange : (value : string) => void;
   pressOpacity? : number;
   iconSize? : number;
   iconRightClosed? : JSX.Element;
@@ -24,13 +25,21 @@ interface Props {
   borderRightWidth? : number;
   borderTopColor? : string;
   borderBottomColor? : string;
-  borderLeftColor? : string;
-  borderRightColor? : string;
+  borderLeftColor? :    string;
+  borderRightColor? :   string;
 }
 
-export const Select = ({ pressOpacity, placeholder, children } : Props) => {
+export const Select = ({ pressOpacity, placeholder, options, onChange } : Props) => {
 
+  const [currentPlaceholder, setCurrentPlaceholder] = useState<string | null>(null);
   const [modalOptionsVisible, setModalOptionsVisible] = useState(false);
+
+  const onSelect = (opt : OptionType) => {
+    console.log({opt})
+    setModalOptionsVisible(false);
+    setCurrentPlaceholder(opt.label);
+    onChange(opt.value);
+  }
 
   return (
     <TouchableOpacity
@@ -38,30 +47,31 @@ export const Select = ({ pressOpacity, placeholder, children } : Props) => {
       onPress={ () => setModalOptionsVisible(true) }
       activeOpacity={ pressOpacity ? pressOpacity : .8 }
     >
-      <Text style={ styles.placeholder }>{ placeholder }</Text>
+      <Text style={ currentPlaceholder ? styles.placeholderWithValue : styles.placeholder }>{ currentPlaceholder? currentPlaceholder : placeholder }</Text>
       <Icon name="expand-more" color="tomato" size={ widthPercentageToDP(4) } />
       <ModalOptions 
         modalVisible={ modalOptionsVisible } 
         onCloseModal={ () => setModalOptionsVisible(false) }
-        options={ children }
+        options={ options }
+        onSelect={ onSelect }
       />
     </TouchableOpacity>
   )
 }
 
 interface OptionProps {
-  label : string;
-  value : string;
+  opt : OptionType;
+  onSelect : (opt : OptionType) => void;
 }
 
-const Option = ({ label, value } : OptionProps) => {
+const Option = ({ opt, onSelect } : OptionProps) => {
   return(
     <TouchableOpacity 
       style={ styles.optionContainer }
-      onPress={ () => {} }
+      onPress={ () => onSelect(opt) }
       activeOpacity={ .8 }
     >
-      <Text style={ styles.optText }>{ label }</Text>
+      <Text style={ styles.optText }>{ opt.label }</Text>
     </TouchableOpacity>  
   )
 }
@@ -87,15 +97,22 @@ const styles = StyleSheet.create({
   placeholder : {
     color : '#ccc',
   },
+  placeholderWithValue : {
+    color : '#333',
+    fontWeight : '500',
+  },
   optionContainer : {
     backgroundColor : '#fff',
-    width : widthPercentageToDP(50),
+    width : '100%',
     alignSelf : 'center',
     paddingVertical : heightPercentageToDP(1.6),
     paddingHorizontal : widthPercentageToDP(2.8),
-    marginVertical : heightPercentageToDP(.6),
-    borderRadius : 4,
-    elevation : 1,
+    marginVertical : heightPercentageToDP(.3),
+    borderRadius : 8,
+    borderWidth : 2,
+    borderColor : '#c5c5c5',
+    // elevation : 3,
+    // zIndex : 10,
   },
   optText : {
     textAlign : 'center',
