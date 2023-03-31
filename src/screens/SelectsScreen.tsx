@@ -8,21 +8,20 @@ import { useForm } from '../hooks';
 
 export const SelectsScreen = () => {
 
-  const [municipios, setMunicipios] = useState<Municipio[]>([]);
+  const [todosMunicipios, setTodosMunicipios] = useState<Municipio[]>([]);
+  const [municipios, setMunicipios] = useState<OptionType[]>([]);
   const [dptos, setDptos] = useState<OptionType[]>([]);
 
   const { formState, onChangeForm, emptyForm } = useForm({ dpto : '', municipio : '' });
 
   useEffect(() => {
     appConn.get<Municipio[]>(municipiosApiURI)
-      .then(({ data }) => setMunicipios(data))
+      .then(({ data }) => setTodosMunicipios(data))
       .then(console.log);
   }, [])
   
-  useEffect(() => {
-    // const newDptos : OptionType[] = [];
-    
-    const newDptos : OptionType[] = municipios.map(mp => ({ label : mp.departamento, value : mp.departamento.toUpperCase() }));
+  useEffect(() => {    
+    const newDptos : OptionType[] = todosMunicipios.map(mp => ({ label : mp.departamento, value : mp.departamento.toUpperCase() }));
     const map = new Map();
 
     for (let dpto of newDptos) {
@@ -31,18 +30,15 @@ export const SelectsScreen = () => {
     const iteratorValues = map.values();
     const uniqueDptos = [...iteratorValues];
     setDptos(uniqueDptos.sort((a,b) => (a.label > b.label) ? 1 : ((b.label > a.label) ? -1 : 0)));
-  }, [municipios])
+  }, [todosMunicipios])
 
 
   useEffect(() => {
-    const newMunp = municipios.filter(mp => mp.departamento == formState.dpto);
-    setMunicipios(newMunp);
+    const newMunp = todosMunicipios.filter(mp => mp.departamento.toUpperCase() == formState.dpto.toUpperCase());
+    const newMunOpts : OptionType[] = newMunp.map(mp => ({ label : mp.municipio, value : mp.municipio.toUpperCase() }));
+    setMunicipios(newMunOpts.sort((a,b) => (a.label > b.label) ? 1 : ((b.label > a.label) ? -1 : 0)));
   }, [formState.dpto])
   
-  
-
-  console.log({ formState : JSON.stringify(formState, null, 3)});
-
   return (
     <View style={ styles.container }>
       <Select 
@@ -52,8 +48,9 @@ export const SelectsScreen = () => {
         />
       <Select 
         placeholder='Municipio' 
-        options={ selectOptions } 
+        options={ municipios } 
         onChange={ (value) => onChangeForm(value, 'municipio') }
+        emptyString='Selecciona primero un departamento'
       />
     </View>
   )

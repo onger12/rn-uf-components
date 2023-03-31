@@ -11,6 +11,7 @@ interface Props {
   placeholder : string;
   options : OptionType[];
   onChange : (value : string) => void;
+  emptyString? : string;
   pressOpacity? : number;
   iconSize? : number;
   iconRightClosed? : JSX.Element;
@@ -29,31 +30,31 @@ interface Props {
   borderRightColor? :   string;
 }
 
-export const Select = ({ pressOpacity, placeholder, options, onChange } : Props) => {
+export const Select = ({ pressOpacity, emptyString, placeholder, options, onChange } : Props) => {
 
   const [currentPlaceholder, setCurrentPlaceholder] = useState<string | null>(null);
   const [modalOptionsVisible, setModalOptionsVisible] = useState(false);
 
   const onSelect = (opt : OptionType) => {
-    console.log({opt})
     setModalOptionsVisible(false);
     setCurrentPlaceholder(opt.label);
     onChange(opt.value);
   }
 
   return (
-    <TouchableOpacity
-      style={ styles.container }
-      onPress={ () => setModalOptionsVisible(true) }
-      activeOpacity={ pressOpacity ? pressOpacity : .8 }
-    >
-      <Text style={ currentPlaceholder ? styles.placeholderWithValue : styles.placeholder }>{ currentPlaceholder? currentPlaceholder : placeholder }</Text>
-      <Icon name="expand-more" color="tomato" size={ widthPercentageToDP(4) } />
+    <TouchableOpacity 
+      style={ styles.container } 
+      onPress={ () => setModalOptionsVisible(true) } 
+      activeOpacity={ pressOpacity ? pressOpacity : .8 } 
+    > 
+      <Text style={ currentPlaceholder ? styles.placeholderWithValue : styles.placeholder }>{ currentPlaceholder? currentPlaceholder : placeholder }</Text> 
+      <Icon name="expand-more" color="tomato" size={ widthPercentageToDP(4) } /> 
       <ModalOptions 
         modalVisible={ modalOptionsVisible } 
-        onCloseModal={ () => setModalOptionsVisible(false) }
-        options={ options }
-        onSelect={ onSelect }
+        onCloseModal={ () => setModalOptionsVisible(false) } 
+        options={ options } 
+        onSelect={ onSelect } 
+        emptyString={ emptyString && emptyString }
       />
     </TouchableOpacity>
   )
@@ -107,14 +108,15 @@ const styles = StyleSheet.create({
     alignSelf : 'center',
     paddingVertical : heightPercentageToDP(1.6),
     paddingHorizontal : widthPercentageToDP(2.8),
-    marginVertical : heightPercentageToDP(.3),
+    marginVertical : heightPercentageToDP(.23),
     borderRadius : 8,
-    borderWidth : 2,
-    borderColor : '#c5c5c5',
-    // elevation : 3,
+    // borderWidth : 2,
+    // borderColor : '#c5c5c5',
+    elevation : 2,
     // zIndex : 10,
   },
   optText : {
     textAlign : 'center',
+    fontWeight : '500',
   }
 })

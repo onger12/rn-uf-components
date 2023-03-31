@@ -56,12 +56,13 @@ const CustomModal = ({ children, size, visible, onPressBackdrop, closeModal } : 
           closeModal();
           onPressBackdrop && onPressBackdrop();
         }}
+        activeOpacity={ 1 }
       >
         <TouchableOpacity
           activeOpacity={ 1 }
+          style={[ styles.modalInternalContainer, { width : WIDTH } ]}
         >
           <ScrollView 
-            style={[ styles.modalInternalContainer, { width : WIDTH } ]}
             contentContainerStyle={ styles.modalInternalContentContainer }
             showsHorizontalScrollIndicator={ false }
             showsVerticalScrollIndicator={ false }
@@ -83,8 +84,8 @@ const Header = ({ children } : HeaderProps) => {
 }
 const Content = ({ children, style } : ContentProps) => {
   return (
-    <View style={ style ? style :  styles.contentContainer }>
-      { children }
+    <View style={ style ? [ styles.contentContainer, style ] :  styles.contentContainer }>
+      { children && children }
     </View>
   )
 }
@@ -115,9 +116,12 @@ const styles = StyleSheet.create({
     backgroundColor : 'rgba(0, 0, 0, 0.2)',
   },
   modalInternalContainer : {
+    // minHeight : heightPercentageToDP(2),
     borderRadius : 12,
     backgroundColor : '#fff',
     maxHeight : heightPercentageToDP(90),
+    // paddingVertical : heightPercentageToDP(4),
+    overflow : 'hidden',
   },
   headerContainer : {
     borderWidth : 1,

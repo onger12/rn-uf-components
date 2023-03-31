@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet } from 'react-native';
+import { StyleSheet, Text } from 'react-native';
 
 import CustomModal from '../CustomModal'
 import { OptionType } from '../../types';
@@ -11,18 +11,19 @@ interface Props {
   onCloseModal : () => void;
   options : OptionType[];
   onSelect : (opt : OptionType) => void;
+  emptyString? : string;
 }
 
-export const ModalOptions = ({ modalVisible, onCloseModal, options, onSelect } : Props) => {
+export const ModalOptions = ({ modalVisible, emptyString, onCloseModal, options, onSelect } : Props) => {
   
   return (
     <CustomModal 
       visible={ modalVisible }
       closeModal={ onCloseModal }
       size='xl'
-    >
+      >
       <CustomModal.Content style={ styles.modalContent }>
-        { options.map(opt => <Select.Option key={ opt.value } opt={ opt } onSelect={ onSelect } /> ) }
+        { options.length !== 0 ? options.map(opt => <Select.Option key={ opt.value } opt={ opt } onSelect={ onSelect } /> ) : <Text>{ emptyString ? emptyString : "Empty data here" }</Text>}
       </CustomModal.Content>
     </CustomModal>
       
