@@ -32,6 +32,13 @@ export const SelectsScreen = () => {
     const uniqueDptos = [...iteratorValues];
     setDptos(uniqueDptos.sort((a,b) => (a.label > b.label) ? 1 : ((b.label > a.label) ? -1 : 0)));
   }, [municipios])
+
+
+  useEffect(() => {
+    const newMunp = municipios.filter(mp => mp.departamento == formState.dpto);
+    setMunicipios(newMunp);
+  }, [formState.dpto])
+  
   
 
   console.log({ formState : JSON.stringify(formState, null, 3)});
