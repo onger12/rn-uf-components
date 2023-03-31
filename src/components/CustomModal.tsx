@@ -1,12 +1,14 @@
 import { useState, useEffect } from 'react';
 import { Modal, View, StyleSheet, TouchableOpacity, Text } from 'react-native';
+import { heightPercentageToDP, widthPercentageToDP } from 'react-native-responsive-screen';
 
 type ModalSize = 's' | 'l' | 'm' | 'xl' | 'xxl';
 
 
 interface Props {
-  children? : JSX.Element | JSX.Element[];
   visible : boolean;
+  closeModal : () => void;
+  children? : JSX.Element | JSX.Element[];
   onPressBackdrop? : () => void;
   size? : ModalSize;
 }
@@ -22,21 +24,21 @@ interface FooterProps {
   children? : JSX.Element | JSX.Element[];
 }
 
-const CustomModal = ({ children, size, visible, onPressBackdrop } : Props) => {
+const CustomModal = ({ children, size, visible, onPressBackdrop, closeModal } : Props) => {
 
-  const [WIDTH, setWIDTH] = useState('55%');
+  const [WIDTH, setWIDTH] = useState(widthPercentageToDP(55));
 
   useEffect(() => {
     if(size === 's') {
-      setWIDTH('30%');
+      setWIDTH(widthPercentageToDP(30));
     }else if(size === 'm') {
-      setWIDTH('55%');
+      setWIDTH(widthPercentageToDP(55));
     }else if(size === 'l') {
-      setWIDTH('70%');
+      setWIDTH(widthPercentageToDP(70));
     }else if(size === 'xl') {
-      setWIDTH('85%');
+      setWIDTH(widthPercentageToDP(85));
     }else {
-      setWIDTH('100%');
+      setWIDTH(widthPercentageToDP(65));
     }
   }, [size])
   
@@ -48,13 +50,16 @@ const CustomModal = ({ children, size, visible, onPressBackdrop } : Props) => {
     >
       <TouchableOpacity 
         style={ styles.modalContainer }
-        onPress={ onPressBackdrop }
+        onPress={ () => {
+          closeModal();
+          onPressBackdrop && onPressBackdrop();
+        }}
       >
         <TouchableOpacity
           activeOpacity={ 1 }
         >
           <View 
-            style={[ styles.modalInternalContainer, { width : '100%' } ]}
+            style={[ styles.modalInternalContainer, { width : WIDTH } ]}
           >{ children }</View>
         </TouchableOpacity>
       </TouchableOpacity>
@@ -105,7 +110,6 @@ const styles = StyleSheet.create({
   modalInternalContainer : {
     borderRadius : 12,
     backgroundColor : '#fff',
-    width : '100%',
   },
   headerContainer : {
     borderWidth : 1,
@@ -120,6 +124,7 @@ const styles = StyleSheet.create({
     borderRightWidth : 1,
     borderLeftColor : '#ccc',
     borderRightColor  : '#ccc',
+    alignItems : 'center',
   },
   footerContainer : {
     borderWidth : 1,

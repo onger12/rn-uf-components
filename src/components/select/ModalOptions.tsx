@@ -1,13 +1,26 @@
 import React from 'react';
-import { StyleSheet, Text, View } from 'react-native';
+import { StyleSheet, Button, Text, View } from 'react-native';
 
 import CustomModal from '../CustomModal'
 
-export const ModalOptions = () => {
+interface Props {
+  modalVisible : boolean;
+  onCloseModal : () => void;
+  options :  JSX.Element | JSX.Element[];
+}
+
+export const ModalOptions = ({ modalVisible, onCloseModal, options } : Props) => {
+  
   return (
-    <View>
-      <Text>ModalOptions</Text>
-    </View>
+    <CustomModal 
+      visible={ modalVisible }
+      closeModal={ onCloseModal }
+    >
+      <CustomModal.Content>
+        { options }
+      </CustomModal.Content>
+    </CustomModal>
+      
   )
 }
 

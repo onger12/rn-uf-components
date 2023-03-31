@@ -7,7 +7,10 @@ export const SelectsScreen = () => {
     <View style={ styles.container }>
       <Select 
         placeholder='Gender'
-      />
+      >
+        <Select.Option label='Opt1' value="Opt1" />
+        <Select.Option label='Opt2' value="Opt2" />
+      </Select>
     </View>
   )
 }
